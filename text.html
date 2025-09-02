@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portofolio • Pynd</title>
+<meta name="description" content="Portofolio hacker-style ekstrem – karya & kontak cepat">
+<meta name="theme-color" content="#00ff41">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+:root{--bg:#000;--fg:#00ff41;--muted:#0f0c;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Share Tech Mono',monospace;color:var(--fg);background:var(--bg);}
+#pinScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:10;animation:fadeIn 0.5s ease;}
+#pinScreen.shake{animation:shake 0.3s;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-10px);}50%{transform:translateX(10px);}75%{transform:translateX(-10px);}}
+#pinScreen input{font-family:'Share Tech Mono',monospace;font-size:20px;padding:10px 16px;border:1px solid var(--fg);border-radius:6px;background:#000;color:var(--fg);outline:none;text-align:center;width:120px;}
+#pinScreen button{margin-top:16px;padding:10px 16px;border:1px solid var(--fg);border-radius:6px;background:transparent;color:var(--fg);cursor:pointer;transition:all .2s;}
+#pinScreen button:hover{background:var(--fg);color:#000;}
+#pinScreen p{color:red;margin-top:10px;display:none;text-shadow:0 0 4px #f00,0 0 8px #f00;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+main{display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 16px;text-align:center;min-height:100vh;position:relative;z-index:1;}
+canvas#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background:var(--bg);}
+h1{font-size:clamp(28px,6vw,48px);margin:0 0 12px;text-shadow:0 0 8px var(--fg);white-space:nowrap;overflow:hidden;border-right:2px solid var(--fg);}
+h1.glitch{position:relative;color:var(--fg);animation:glitchAnim 2s infinite;}
+@keyframes glitchAnim{0%{text-shadow:2px 0 #0ff,-2px 0 #f0f;}20%{text-shadow:-2px 0 #0ff,2px 0 #f0f;}40%{text-shadow:2px 0 #0ff,-2px 0 #f0f;}60%{text-shadow:-2px 0 #0ff,2px 0 #f0f;}80%{text-shadow:2px 0 #0ff,-2px 0 #f0f;}100%{text-shadow:0 0 var(--fg);}}
+h1.typing{animation:blink .7s step-end infinite alternate}
+@keyframes blink{50%{border-color:transparent}}
+p{color:var(--muted);margin:0 0 24px;}
+.btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+.btn{background:transparent;color:var(--fg);padding:10px 16px;border:1px solid var(--fg);border-radius:6px;font-weight:600;transition:all .15s;box-shadow:0 0 8px var(--fg) inset,0 0 8px var(--fg);}
+.btn:hover{background:var(--fg);color:#000;box-shadow:0 0 12px var(--fg),0 0 24px var(--fg);}
+.btns .btn.flicker{animation:flicker 1.5s infinite alternate;}
+@keyframes flicker{0%{text-shadow:0 0 2px #0f0,0 0 5px #0f0;}50%{text-shadow:0 0 4px #0f0,0 0 10px #0f0;}100%{text-shadow:0 0 2px #0f0,0 0 5px #0f0;}}
+.intro-btns .btn{min-width:180px;}
+#introText{font-size:16px;text-shadow:0 0 4px var(--fg);margin-top:20px;max-width:600px;text-align:center;}
+#terminal{margin-top:30px;width:80%;max-width:600px;background:#000;border:1px solid var(--fg);padding:16px;text-align:left;font-size:14px;color:var(--fg);overflow-x:auto;white-space:pre-wrap;}
+#terminal input{background:#000;color:var(--fg);border:none;outline:none;width:90%;}
+footer{padding:18px 0;color:var(--muted);text-align:center;border-top:1px solid #003300;z-index:1;animation:flicker 1.5s infinite alternate;}
+</style>
+</head>
+<body>
+
+<div id="pinScreen">
+  <h2>Say HI</h2>
+  <input type="password" id="pinInput" maxlength="4" autofocus />
+  <button onclick="checkPIN()">Enter</button>
+  <p id="pinError">PIN salah!</p>
+</div>
+
+<canvas id="matrix"></canvas>
+<main>
+  <h1 id="typingText" class="typing glitch">&gt;_ Halo, saya Pynd</h1>
+  <p>Selamat datang di portofolio saya. Klik tombol di bawah untuk kontak cepat.</p>
+  
+  <!-- Tombol kontak -->
+  <div class="btns">
+    <a href="https://instagram.com/Frnsankmmh" target="_blank" class="btn flicker">Instagram</a>
+    <a href="https://t.me/pynd1" target="_blank" class="btn flicker">Telegram</a>
+    <a href="https://wa.me/628811958607" target="_blank" class="btn flicker">WhatsApp</a>
+  </div>
+  
+  <!-- Tombol perkenalan -->
+  <div class="btns intro-btns" style="margin-top:40px;">
+    <button class="btn flicker" onclick="showIntro('Halo! Saya Pynd, Web Developer dan hacker style enthusiast.')">Tentang Saya</button>
+    <button class="btn flicker" onclick="showIntro('Saya suka membuat portofolio keren dan projek front-end.')">Hobi & Minat</button>
+    <button class="btn flicker" onclick="showIntro('Kontak cepat: Instagram, Telegram, WhatsApp di atas.')">Kontak</button>
+  </div>
+  <p id="introText"></p>
+
+  <!-- Mini Terminal -->
+  <div id="terminal">
+    <span>&gt; </span><input type="text" id="termInput" placeholder="Ketik command..." />
+    <div id="termOutput"></div>
+  </div>
+</main>
+
+<footer><small>© <span id="y"></span> Pynd</small></footer>
+
+<!-- Audio -->
+<audio id="typeSound" src="https://freesound.org/data/previews/320/320181_5260877-lq.mp3" preload="auto"></audio>
+<audio id="alertSound" src="https://freesound.org/data/previews/351/351904_5121236-lq.mp3" preload="auto"></audio>
+
+<script>
+document.getElementById('y').textContent=new Date().getFullYear();
+
+// Matrix multi-layer
+const canvas=document.getElementById('matrix');
+const ctx=canvas.getContext('2d');
+canvas.height=window.innerHeight; canvas.width=window.innerWidth;
+const letters='アァイィウヴエェオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+const lettersArr=letters.split('');
+const fontSize=14;
+let columns=Math.floor(canvas.width/fontSize);
+let drops1=new Array(columns).fill(1);
+let drops2=new Array(columns).fill(0);
+function draw(){
+  ctx.fillStyle='rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  [drops1,drops2].forEach((drops,colorIdx)=>{
+    for(let i=0;i<drops.length;i++){
+      ctx.fillStyle=colorIdx===0?'#0F0':'#7FFF00';
+      ctx.font=fontSize+'px Share Tech Mono';
+      const text=lettersArr[Math.floor(Math.random()*lettersArr.length)];
+      ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+      if(drops[i]*fontSize>canvas.height&&Math.random()>0.975)drops[i]=0;
+      drops[i]++;
+    }
+  });
+}
+setInterval(draw,33);
+window.addEventListener('resize',()=>{
+  canvas.height=window.innerHeight; canvas.width=window.innerWidth;
+  columns=Math.floor(canvas.width/fontSize);
+  drops1=new Array(columns).fill(1); drops2=new Array(columns).fill(0);
+});
+
+// PIN
+function checkPIN(){
+  const pin=document.getElementById('pinInput').value.toUpperCase();
+  const pinScreen=document.getElementById('pinScreen');
+  const error=document.getElementById('pinError');
+  const alertSound=document.getElementById('alertSound');
+  if(pin==='HI'){pinScreen.style.display='none'; document.querySelector('main').style.display='flex';} 
+  else{error.style.display='block'; pinScreen.classList.add('shake'); alertSound.play(); setTimeout(()=>pinScreen.classList.remove('shake'),300);}
+}
+document.getElementById('pinInput').addEventListener('keypress',function(e){if(e.key==='Enter') checkPIN();});
+
+// Header typing
+const texts=['>_ Halo, saya Pynd','>_ Web Developer','>_ Hacker Mode ON'];
+let idx=0,i=0,currentText='';
+const typeSound=document.getElementById('typeSound');
+function typeLoop(){
+  if(i<texts[idx].length){currentText+=texts[idx][i];document.getElementById('typingText').textContent=currentText+'_';typeSound.currentTime=0;typeSound.play();i++;setTimeout(typeLoop,100);}
+  else{setTimeout(()=>{currentText='';i=0;idx=(idx+1)%texts.length;typeLoop();},1500);}
+}
+typeLoop();
+
+// Intro text
+function showIntro(text){
+  const intro=document.getElementById('introText');intro.textContent='';let i=0;
+  function typeText(){if(i<text.length){
